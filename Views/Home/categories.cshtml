@@ -1,0 +1,23 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Categories>
+
+    <h1>Categories</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Category Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var categories in Model) {
+                <tr>
+                    <td>@categories.Category_id</td>
+                    <td>@categories.Category_name</td>
+                </tr>
+            }
+        </tbody>
+    </table>

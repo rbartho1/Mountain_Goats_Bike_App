@@ -70,6 +70,84 @@ namespace Mountain_Goats_Bike_App.Controllers
 
             return View(brandList);
         }
+        public IActionResult Categories()
+        {
+            List<Categories> categoryList = new List<Categories>();
+            string connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string sql = "SELECT * FROM [production].[categories]";
+                    SqlCommand command = new SqlCommand(sql, connection);
+                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Categories categories = new Categories
+                            {
+                                Category_id = Convert.ToInt32(dataReader["category_id"]),
+                                Category_name = Convert.ToString(dataReader["category_name"])
+                            };
+                            categoryList.Add(categories);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"error happened" + ex);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            _logger.LogInformation($"Retrieved {categoryList.Count} brands from the database.");
+            _logger.LogInformation($"Retrieved {categoryList} brands from the database.");
+
+            return View(categoryList);
+        }
+
+        public IActionResult Inventory()
+        {
+            List<Inventory> inventoryList = new List<Inventory>();
+            string connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string sql = "SELECT * FROM [production].[stocks]";
+                    SqlCommand command = new SqlCommand(sql, connection);
+                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Inventory inventory = new Inventory
+                            {
+                                Store_id = Convert.ToInt32(dataReader["store_id"]),
+                                Product_id = Convert.ToInt32(dataReader["product_id"]),
+                                Quantity = Convert.ToInt32(dataReader["quantity"])
+                            };
+                            inventoryList.Add(inventory);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"error happened" + ex);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            _logger.LogInformation($"Retrieved {inventoryList.Count} brands from the database.");
+            _logger.LogInformation($"Retrieved {inventoryList} brands from the database.");
+
+            return View(inventoryList);
+        }
     }
 }
 

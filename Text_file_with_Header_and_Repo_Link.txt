@@ -1,0 +1,8 @@
+Ryan Bartholomew 
+StudentID: 917656984
+Database Systems II (CS 6232)
+Spring 2025
+Homework 3
+
+
+The link to my private GitHub Repository for this project is https://github.com/rbartho1/Mountain_Goats_Bike_App.
