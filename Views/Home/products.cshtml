@@ -1,0 +1,31 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Products>
+
+    <h1>Products</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Brand ID</th>
+                <th>Category ID</th>
+                <th>Model Year</th>
+                <th>List Price</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var products in Model) {
+                <tr>
+                    <td>@products.Product_id</td>
+                    <td>@products.Product_name</td>
+                    <td>@products.Brand_id</td>
+                    <td>@products.Category_id</td>
+                    <td>@products.Model_year</td>
+                    <td>@products.List_price</td>
+                </tr>
+            }
+        </tbody>
+    </table>

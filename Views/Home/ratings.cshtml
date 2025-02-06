@@ -1,0 +1,25 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Ratings>
+
+    <h1>Ratings</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Satisfaction ID</th>
+                <th>Satisfaction Level</th>
+                <th>Order Number</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var ratings in Model) {
+                <tr>
+                    <td>@ratings.Satisfaction_id</td>
+                    <td>@ratings.Satisfaction_level</td>
+                    <td>@ratings.Order_number</td>
+                </tr>
+            }
+        </tbody>
+    </table>

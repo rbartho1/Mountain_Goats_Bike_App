@@ -103,8 +103,8 @@ namespace Mountain_Goats_Bike_App.Controllers
                     connection.Close();
                 }
             }
-            _logger.LogInformation($"Retrieved {categoryList.Count} brands from the database.");
-            _logger.LogInformation($"Retrieved {categoryList} brands from the database.");
+            _logger.LogInformation($"Retrieved {categoryList.Count} categories from the database.");
+            _logger.LogInformation($"Retrieved {categoryList} categories from the database.");
 
             return View(categoryList);
         }
@@ -143,11 +143,95 @@ namespace Mountain_Goats_Bike_App.Controllers
                     connection.Close();
                 }
             }
-            _logger.LogInformation($"Retrieved {inventoryList.Count} brands from the database.");
-            _logger.LogInformation($"Retrieved {inventoryList} brands from the database.");
+            _logger.LogInformation($"Retrieved {inventoryList.Count} inventory items from the database.");
+            _logger.LogInformation($"Retrieved {inventoryList} inventory items from the database.");
 
             return View(inventoryList);
         }
+
+        public IActionResult Products()
+        {
+            List<Products> productsList = new List<Products>();
+            string connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string sql = "SELECT * FROM [production].[products]";
+                    SqlCommand command = new SqlCommand(sql, connection);
+                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Products products = new Products
+                            {
+                                Product_id = Convert.ToInt32(dataReader["product_id"]),
+                                Product_name = Convert.ToString(dataReader["product_name"]),
+                                Brand_id = Convert.ToInt32(dataReader["brand_id"]),
+                                Category_id = Convert.ToInt32(dataReader["category_id"]),
+                                Model_year = Convert.ToInt32(dataReader["model_year"]),
+                                List_price = Convert.ToDecimal(dataReader["list_price"])
+                            };
+                            productsList.Add(products);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"error happened" + ex);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            _logger.LogInformation($"Retrieved {productsList.Count} brands from the database.");
+            _logger.LogInformation($"Retrieved {productsList} brands from the database.");
+
+            return View(productsList);
+        }
+
+        public IActionResult Ratings()
+        {
+            List<Ratings> ratingsList = new List<Ratings>();
+            string connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string sql = "SELECT * FROM [sales].[order_satisfaction]";
+                    SqlCommand command = new SqlCommand(sql, connection);
+                    using (SqlDataReader dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Ratings ratings = new Ratings
+                            {
+                                Satisfaction_id = Convert.ToInt32(dataReader["sat_id"]),
+                                Satisfaction_level = Convert.ToInt32(dataReader["satisfaction_level"]),
+                                Order_number = Convert.ToInt32(dataReader["order"])
+                            };
+                            ratingsList.Add(ratings);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"error happened" + ex);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            _logger.LogInformation($"Retrieved {ratingsList.Count} brands from the database.");
+            _logger.LogInformation($"Retrieved {ratingsList} brands from the database.");
+
+            return View(ratingsList);
+        }
+
     }
 }
 
