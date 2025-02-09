@@ -1,0 +1,30 @@
+﻿@model List<Mountain_Goats_Bike_App.Models.ItemsOrdered>
+
+<h1>Items Ordered (First 30)</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Item ID</th>
+            <th>Product ID</th>
+            <th>Quantity</th>
+            <th>List Price</th>
+            <th>Discount</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @foreach (var items in Model)
+        {
+            <tr>
+                <td>@items.Order_id</td>
+                <td>@items.Item_id</td>
+                <td>@items.Product_id</td>
+                <td>@items.Quantity</td>
+                <td>@items.List_price</td>
+                <td>@items.Discount</td>
+            </tr>
+        }
+    </tbody>
+</table>

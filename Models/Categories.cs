@@ -3,10 +3,10 @@
     public class Categories
     {
 
-        public int Category_id { get; set; }
+        public required int Category_id { get; set; }
 
 
-        public string Category_name { get; set; }
+        public required string Category_name { get; set; }
 
     }
 }

@@ -1,0 +1,35 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Stores>
+
+    <h1>Store Locations</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Store ID</th>
+                <th>Store Name</th>
+                <th>Phone Number</th>
+                <th>E-Mail</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zipcode</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var stores in Model) {
+                <tr>
+                    <td>@stores.Store_id</td>
+                    <td>@stores.Store_name</td>
+                    <td>@stores.Phone_number</td>
+                    <td>@stores.Email</td>
+                    <td>@stores.Street_address</td>
+                    <td>@stores.City_name</td>
+                    <td>@stores.State</td>
+                    <td>@stores.Zip_code</td>
+                </tr>
+            }
+        </tbody>
+    </table>

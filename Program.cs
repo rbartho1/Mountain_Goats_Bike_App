@@ -1,7 +1,19 @@
+using Mountain_Goats_Bike_App.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<CategoriesData>();
+builder.Services.AddSingleton<BrandsData>();
+builder.Services.AddSingleton<InventoryData>();
+builder.Services.AddSingleton<ProductsData>();
+builder.Services.AddSingleton<RatingsData>();
+builder.Services.AddSingleton<CustomersData>();
+builder.Services.AddSingleton<LocationsData>();
+builder.Services.AddSingleton<StaffData>();
+builder.Services.AddSingleton<ItemsOrderedData>();
+builder.Services.AddSingleton<OrdersData>();
 
 var app = builder.Build();
 

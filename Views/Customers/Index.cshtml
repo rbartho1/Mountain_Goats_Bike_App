@@ -1,0 +1,37 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Customers>
+
+    <h1>Customers (First 30)</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zipcode</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var customers in Model) {
+                <tr>
+                    <td>@customers.Customer_id</td>
+                    <td>@customers.First_name</td>
+                    <td>@customers.Last_name</td>
+                    <td>@customers.Phone_number</td>
+                    <td>@customers.Email</td>
+                    <td>@customers.Street_address</td>
+                    <td>@customers.City_name</td>
+                    <td>@customers.State</td>
+                    <td>@customers.Zip_code</td>
+                </tr>
+            }
+        </tbody>
+    </table>

@@ -3,10 +3,10 @@
     public class Brands
     {
 
-        public int Brand_id { get; set; }
+        public required int Brand_id { get; set; }
 
 
-        public string Brand_name { get; set; }
+        public required string Brand_name { get; set; }
 
     }
 }

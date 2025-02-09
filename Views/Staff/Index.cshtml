@@ -1,0 +1,35 @@
+﻿
+
+@model List<Mountain_Goats_Bike_App.Models.Staffs>
+
+    <h1>Staff</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>E-Mail</th>
+                <th>Phone Number</th>
+                <th>Actively Working</th>
+                <th>Store ID</th>
+                <th>Manager ID</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            @foreach (var staffs in Model) {
+                <tr>
+                    <td>@staffs.Staff_id</td>
+                    <td>@staffs.First_name</td>
+                    <td>@staffs.Last_name</td>
+                    <td>@staffs.Email</td>
+                    <td>@staffs.Phone_number</td>
+                    <td>@staffs.Active</td>
+                    <td>@staffs.Store_id</td>
+                    <td>@staffs.Manager_id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
