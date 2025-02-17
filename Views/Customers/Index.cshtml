@@ -1,37 +1,55 @@
-﻿
+﻿@model PaginatedList<Mountain_Goats_Bike_App.Models.Customers>
 
-@model List<Mountain_Goats_Bike_App.Models.Customers>
+<h1>Customers</h1>
+<p>Total: @Model.TotalCustomers</p>
+<p>Showing per page: @Model.PageSize</p>
+<p>Number of pages: @Model.TotalPages</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zipcode</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
 
-    <h1>Customers (First 30)</h1>
-    <table class="table">
-        <thead>
+
+        @foreach (var customers in Model) {
             <tr>
-                <th>Customer ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zipcode</th>
+                <td>@customers.Customer_id</td>
+                <td>@customers.First_name</td>
+                <td>@customers.Last_name</td>
+                <td>@customers.Phone_number</td>
+                <td>@customers.Email</td>
+                <td>@customers.Street_address</td>
+                <td>@customers.City_name</td>
+                <td>@customers.State</td>
+                <td>@customers.Zip_code</td>
+                <td>
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Details", "Customers", new{id = @customers.Customer_id} )">Details Page</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
+        }
+    </tbody>
+</table>
 
-            
-            @foreach (var customers in Model) {
-                <tr>
-                    <td>@customers.Customer_id</td>
-                    <td>@customers.First_name</td>
-                    <td>@customers.Last_name</td>
-                    <td>@customers.Phone_number</td>
-                    <td>@customers.Email</td>
-                    <td>@customers.Street_address</td>
-                    <td>@customers.City_name</td>
-                    <td>@customers.State</td>
-                    <td>@customers.Zip_code</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action = "Index" asp-route-pageNumber = "@(Model.PageIndex - 1)" class = "btn btn-outline-secondary @prevDisabled">
+    Previous
+</a>
+
+<a asp-action = "Index" asp-route-pageNumber = "@(Model.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">
+    Next
+</a>

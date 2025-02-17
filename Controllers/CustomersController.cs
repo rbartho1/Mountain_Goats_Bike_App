@@ -12,10 +12,21 @@ namespace Mountain_Goats_Bike_App.Controllers
             _dataAccess = dataAccess;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? pageNumber)
         {
+            int pageSize = 10;
+            
             var customers = _dataAccess.GetCustomers();
-            return View(customers);
+
+            return View(PaginatedList<Mountain_Goats_Bike_App.Models.Customers>.Create(customers, pageNumber ?? 1, pageSize));
         }
+
+        public IActionResult Details(int id)
+        {
+            var customer_details = _dataAccess.GetCustomerDetails(id);
+            return View(customer_details);
+        }
+
+
     }
 }
