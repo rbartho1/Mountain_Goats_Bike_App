@@ -26,7 +26,5 @@ namespace Mountain_Goats_Bike_App.Controllers
             var customer_details = _dataAccess.GetCustomerDetails(id);
             return View(customer_details);
         }
-
-
     }
 }

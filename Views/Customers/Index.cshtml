@@ -92,7 +92,7 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-outline-secondary" href="@Url.Action("Details", "Customers", new{id = @customers.Customer_id} )">Orders</a>
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "CustomerOrders", new{id = @customers.Customer_id} )">Orders</a>
                 </td>
             </tr>
         }

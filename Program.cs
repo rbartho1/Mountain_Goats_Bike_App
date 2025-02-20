@@ -14,6 +14,7 @@ builder.Services.AddSingleton<LocationsData>();
 builder.Services.AddSingleton<StaffData>();
 builder.Services.AddSingleton<ItemsOrderedData>();
 builder.Services.AddSingleton<OrdersData>();
+builder.Services.AddSingleton<CustomerOrdersData>();
 
 var app = builder.Build();
 

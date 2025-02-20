@@ -1,0 +1,32 @@
+﻿@model List<Mountain_Goats_Bike_App.Models.CustomerOrders>
+
+<h1>Customer Orders</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Date</th>
+            <th>Order Total</th>
+            <th>Item ID</th>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @foreach (var customerOrders in Model)
+        {
+            <tr>
+                <td>@customerOrders.Order_id</td>
+                <td>@customerOrders.Order_date</td>
+                <td>@customerOrders.Total_order_price</td>
+                <td>@customerOrders.Item_id</td>
+                <td>@customerOrders.Item_name</td>
+                <td>@customerOrders.Quantity</td>
+                <td>@customerOrders.Unit_price</td>
+            </tr>
+        }
+    </tbody>
+</table>
