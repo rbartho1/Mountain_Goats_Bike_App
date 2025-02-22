@@ -23,7 +23,7 @@ namespace Mountain_Goats_Bike_App.Data
                     ",SUM(CONVERT(DECIMAL(10, 2), ROUND((1 - [discount]) *" +
                     "([quantity] * [order_items].[list_price]), 2))) OVER (PARTITION BY [order_items].[order_id]) AS total_order_price" +
                     ",[order_items].[list_price] AS unit_price" +
-                    ",[quantity]" +
+                    ",[quantity], [first_name], [last_name]" +
                     "FROM [BikeStores].[sales].[order_items]" +
                     "JOIN [BikeStores].[sales].[orders]" +
                     "ON [order_items].[order_id] = [orders].[order_id]" +
@@ -50,7 +50,9 @@ namespace Mountain_Goats_Bike_App.Data
                             Quantity = (int)dataReader["quantity"],
                             Order_date = DateOnly.FromDateTime((DateTime)dataReader["date_ordered"]),
                             Item_name = dataReader["product_name"].ToString(),
-                            Total_order_price = (decimal)dataReader["total_order_price"]
+                            Total_order_price = (decimal)dataReader["total_order_price"],
+                            First_name = dataReader["first_name"].ToString(),
+                            Last_name = dataReader["last_name"].ToString(),
                         };
                         customerOrdersList.Add(customerOrder);
                     }

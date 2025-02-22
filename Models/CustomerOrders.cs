@@ -17,5 +17,8 @@
 
         public required decimal Total_order_price { get; set; }
 
+        public required String First_name { get; set; }
+
+        public required String Last_name { get; set; }
     }
 }
