@@ -34,7 +34,9 @@ namespace Mountain_Goats_Bike_App.Data
                     "WHERE [orders].[customer_id] = @ID " +
                     "AND [orders].[order_date] IN(SELECT TOP 3[orders].[order_date]" +
                     "FROM [BikeStores].[sales].[orders] " +
-                    "WHERE [orders].[customer_id] = @ID);";
+                    "WHERE [orders].[customer_id] = @ID " +
+                    "ORDER BY [orders].[order_date] DESC) " +
+                    "ORDER BY total_order_price DESC;";
                 SqlCommand command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@ID", id);
                 using (SqlDataReader dataReader = command.ExecuteReader())
