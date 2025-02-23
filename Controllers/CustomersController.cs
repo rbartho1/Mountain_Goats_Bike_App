@@ -6,10 +6,12 @@ namespace Mountain_Goats_Bike_App.Controllers
     public class CustomersController : Controller
     {
         private readonly CustomersData _dataAccess;
+        private readonly CustomerOrdersData _customerOrdersDataAccess;
 
-        public CustomersController(CustomersData dataAccess)
+        public CustomersController(CustomersData dataAccess, CustomerOrdersData customerOrdersDataAccess)
         {
             _dataAccess = dataAccess;
+            _customerOrdersDataAccess = customerOrdersDataAccess;
         }
 
         public IActionResult Index(int? pageNumber)
@@ -25,6 +27,12 @@ namespace Mountain_Goats_Bike_App.Controllers
         {
             var customer_details = _dataAccess.GetCustomerDetails(id);
             return View(customer_details);
+        }
+
+        public IActionResult CustomerOrders(int id)
+        {
+            var customer_orders = _customerOrdersDataAccess.GetCustomerOrders(id);
+            return View("CustomerOrders/CustomerOrders", customer_orders);
         }
     }
 }

@@ -1,0 +1,43 @@
+﻿@model List<Mountain_Goats_Bike_App.Models.CustomerOrders>
+<div class="text-center">
+    <h1>Customer Orders</h1>
+
+    @foreach (var ordersFromCustomer in Model.DistinctBy(theName => theName.First_name)) {
+        <h4>Customer: @ordersFromCustomer.First_name @ordersFromCustomer.Last_name</h4>
+    }
+    <p>Orders</p>
+</div>
+
+@foreach (var customerOrders in Model.DistinctBy(theOrder => theOrder.Order_id)) {
+    <table class="table">
+            <tr>
+                <td>Order Number: @customerOrders.Order_id</td>
+                <td>Date: @customerOrders.Order_date</td>
+                <td>Order Total: @customerOrders.Total_order_price.ToString("C")</td>
+            </tr>
+    </table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+            </tr>
+        </thead>
+		<tbody>
+            @foreach (var orderToEvaluate in Model)
+            {
+                @if (@orderToEvaluate.Order_id == @customerOrders.Order_id)
+                {
+                <tr>
+                    <td>@orderToEvaluate.Item_id</td>
+                    <td>@orderToEvaluate.Item_name</td>
+                    <td>@orderToEvaluate.Quantity</td>
+                    <td>@orderToEvaluate.Unit_price.ToString("C")</td>
+				</tr>
+				}
+            }
+        </tbody>
+    </table>
+}
