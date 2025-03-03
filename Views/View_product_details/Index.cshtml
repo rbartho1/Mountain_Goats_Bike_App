@@ -1,0 +1,33 @@
+﻿
+@model List<Mountain_Goats_Bike_App.Models.View_product_details>
+
+    <h1>Product Details</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+			    <th>Category</th>
+                <th>Brand Name</th>
+			    <th>Price</th>
+                <th>Store Name</th>
+                <th>Address</th>
+                <th>Store Phone</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach (var product_details in Model) {
+                <tr>
+                    <td>@product_details.Product_name</td>
+                    <td>@product_details.Category_name</td>
+                    <td>@product_details.Brand_name</td>
+                    <td>@product_details.Price.ToString("C")</td>
+                    <td>@product_details.Store_name</td>
+                    <td>@product_details.Street, @product_details.City, @product_details.State, @product_details.Zip_code</td>
+                    <td>@product_details.Store_phone</td>
+                    <td>@product_details.Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
