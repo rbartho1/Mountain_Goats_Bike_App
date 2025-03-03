@@ -11,13 +11,13 @@ namespace Mountain_Goats_Bike_App
 
         public int TotalPages { get; set; }
 
-        public int TotalCustomers { get; set; }
+        public int TotalEntries { get; set; }
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize) 
         {
             PageSize = pageSize;
             PageIndex = pageIndex;
-            TotalCustomers = count;
+            TotalEntries = count;
             TotalPages = (int)Math.Ceiling(count/(double)pageSize);
             this.AddRange(items);
         }

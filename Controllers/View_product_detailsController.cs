@@ -15,10 +15,12 @@ namespace Mountain_Goats_Bike_App.Controllers
             _dataAccess = dataAccess;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? pageNumber)
         {
-            var Product_details = _dataAccess.GetProductDetails();
-            return View(Product_details);
+            int pageSize = 10;
+            var product_details = _dataAccess.GetProductDetails();
+            return View(PaginatedList<Mountain_Goats_Bike_App.Models.View_product_details>.Create(product_details, pageNumber ?? 1, pageSize));
+
         }
     }
 }

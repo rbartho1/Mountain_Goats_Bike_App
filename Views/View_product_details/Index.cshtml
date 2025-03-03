@@ -1,7 +1,11 @@
-﻿
-@model List<Mountain_Goats_Bike_App.Models.View_product_details>
-
+﻿@model PaginatedList<Mountain_Goats_Bike_App.Models.View_product_details>
+<div class="text-center">
     <h1>Product Details</h1>
+    <p>Total: @Model.TotalEntries</p>
+    <p>Showing per page: @Model.PageSize</p>
+    <p>Number of pages: @Model.TotalPages</p>
+</div>
+
     <table class="table">
         <thead>
             <tr>
@@ -31,3 +35,16 @@
             }
         </tbody>
     </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-outline-secondary @prevDisabled">
+    Previous
+</a>
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">
+    Next
+</a>
