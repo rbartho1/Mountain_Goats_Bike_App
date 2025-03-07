@@ -15,7 +15,7 @@ builder.Services.AddSingleton<StaffData>();
 builder.Services.AddSingleton<ItemsOrderedData>();
 builder.Services.AddSingleton<OrdersData>();
 builder.Services.AddSingleton<CustomerOrdersData>();
-builder.Services.AddSingleton<View_product_detailsData>();
+builder.Services.AddSingleton<SearchProductsData>();
 
 var app = builder.Build();
 

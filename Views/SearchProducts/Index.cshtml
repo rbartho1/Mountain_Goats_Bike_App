@@ -1,4 +1,4 @@
-﻿@model PaginatedList<Mountain_Goats_Bike_App.Models.View_product_details>
+﻿@model PaginatedList<Mountain_Goats_Bike_App.Models.SearchProducts>
 <div class="text-center">
     <h1>Product Details</h1>
     <p>Total: @Model.TotalEntries</p>
@@ -7,7 +7,7 @@
 </div>
 <hr />
     <div class ="text-center">
-        <form  asp-action="Index" asp-controller="View_product_details">
+        <form  asp-action="Index" asp-controller="SearchProducts">
             <div class="form-group mb-3">
                     Search by brand: <select name="brand_name" id="the_brands">
                         <option selected="selected" disabled="true"></option>

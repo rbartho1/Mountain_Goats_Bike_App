@@ -3,12 +3,12 @@ using Microsoft.Data.SqlClient;
 
 namespace Mountain_Goats_Bike_App.Data
 {
-    public class View_product_detailsData : DataAccess
+    public class SearchProductsData : DataAccess
     {
-        public View_product_detailsData(IConfiguration configuration) : base(configuration)
+        public SearchProductsData(IConfiguration configuration) : base(configuration)
         { }
 
-        public List<View_product_details> GetProductDetails(string brand_name, string category_name, string zipcode_number, string product_name)
+        public List<SearchProducts> GetProductDetails(string brand_name, string category_name, string zipcode_number, string product_name)
         {
             string the_brand_name;
             if (String.IsNullOrEmpty(brand_name))
@@ -49,7 +49,7 @@ namespace Mountain_Goats_Bike_App.Data
                 the_product_name = "'%" + product_name + "%'";
             }
 
-            var product_deatilsList = new List<View_product_details>();
+            var product_deatilsList = new List<SearchProducts>();
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -71,7 +71,7 @@ namespace Mountain_Goats_Bike_App.Data
                 {
                     while (dataReader.Read())
                     {
-                        View_product_details product_details = new View_product_details
+                        SearchProducts product_details = new SearchProducts
                         {
                             Product_name = dataReader["name_of_product"].ToString(),
                             Category_name = dataReader["name_of_category"].ToString(),

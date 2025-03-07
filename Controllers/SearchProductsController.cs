@@ -6,11 +6,11 @@ using Mountain_Goats_Bike_App.Data;
 
 namespace Mountain_Goats_Bike_App.Controllers
 {
-    public class View_product_detailsController : Controller
+    public class SearchProductsController : Controller
     {
-        private readonly View_product_detailsData _dataAccess;
+        private readonly SearchProductsData _dataAccess;
 
-        public View_product_detailsController(View_product_detailsData dataAccess)
+        public SearchProductsController(SearchProductsData dataAccess)
         {
             _dataAccess = dataAccess;
         }
@@ -28,7 +28,7 @@ namespace Mountain_Goats_Bike_App.Controllers
             ViewData["AllBrandNames"] = allBrandNames;
             ViewData["AllCategoryNames"] = allCategoryNames;
             ViewData["AllZipCodes"] = allZipCodes;
-            return View(PaginatedList<Mountain_Goats_Bike_App.Models.View_product_details>.Create(product_details, pageNumber ?? 1, pageSize));
+            return View(PaginatedList<Mountain_Goats_Bike_App.Models.SearchProducts>.Create(product_details, pageNumber ?? 1, pageSize));
 
         }
 

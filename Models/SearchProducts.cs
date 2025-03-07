@@ -1,6 +1,6 @@
 ﻿namespace Mountain_Goats_Bike_App.Models
 {
-    public class View_product_details
+    public class SearchProducts
     {
 
         public required String Product_name { get; set; }
