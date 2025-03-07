@@ -26,10 +26,10 @@ CREATE OR ALTER VIEW view_product_details
 
 Below is my complete procedure creation query:
 
-GO
 CREATE OR ALTER PROCEDURE proc_cust_order_details
 ( @FirstCustomerOrderDate VARCHAR(12),
-  @SecondCustomerOrderDate VARCHAR(12))
+  @SecondCustomerOrderDate VARCHAR(12), 
+  @ID INT)
 AS
 BEGIN TRY
 	DECLARE @EarliestCustomerOrderDate DATE
@@ -63,10 +63,10 @@ BEGIN TRY
                 ON [order_items].[product_id] = [products].[product_id]
 				JOIN [BikeStores].[sales].[customers]
                 ON [orders].[customer_id] = [customers].[customer_id]
-                WHERE [orders].[customer_id] = 1
+                WHERE [orders].[customer_id] = @ID
                 AND [orders].[order_date] IN(SELECT TOP 3[orders].[order_date]
                 FROM [BikeStores].[sales].[orders]
-                WHERE [orders].[customer_id] = 1
+                WHERE [orders].[customer_id] = @ID
 				AND [orders].[order_date] BETWEEN @EarliestCustomerOrderDate AND @LatestCustomerOrderDate
                 ORDER BY [orders].[order_date] DESC)
                 ORDER BY total_order_price DESC
