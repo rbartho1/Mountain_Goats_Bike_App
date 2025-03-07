@@ -2,8 +2,94 @@ Ryan Bartholomew
 StudentID: 917656984
 Database Systems II (CS 6232)
 Spring 2025
-Homework 4
+Homework 5
 
 
 The link to my private GitHub Repository for this project is https://github.com/rbartho1/Mountain_Goats_Bike_App.
 
+Below is my create view query:
+
+CREATE OR ALTER VIEW view_product_details
+	AS SELECT[products].[product_name] AS name_of_product,
+	[categories].[category_name] AS name_of_category,
+	[brands].[brand_name] AS name_of_brand, [list_price], 
+	[store_name], [street], [city], [state], [zip_code], [phone], [quantity], [products].[product_id] AS id_of_product
+	FROM [BikeStores].[production].[products]
+	JOIN [BikeStores].[production].[brands]
+	ON [products].[brand_id] = [brands].[brand_id]
+	JOIN [BikeStores].[production].[categories]
+	ON [products].[category_id] = [categories].[category_id]
+	JOIN [BikeStores].[production].[stocks]
+	ON [products].[product_id] = [stocks].[product_id]
+	JOIN [BikeStores].[sales].[stores]
+	ON [stocks].[store_id] = [stores].[store_id];
+
+Below is my complete procedure creation query:
+
+GO
+CREATE OR ALTER PROCEDURE proc_cust_order_details
+( @FirstCustomerOrderDate VARCHAR(12),
+  @SecondCustomerOrderDate VARCHAR(12))
+AS
+BEGIN TRY
+	DECLARE @EarliestCustomerOrderDate DATE
+	DECLARE @LatestCustomerOrderDate DATE
+	SET @EarliestCustomerOrderDate = CONVERT(DATE, @FirstCustomerOrderDate)
+	SET @LatestCustomerOrderDate = CONVERT(DATE, @SecondCustomerOrderDate)
+	END TRY
+		BEGIN CATCH
+			BEGIN
+				RAISERROR('Cannot convert one or both of the given dates into a readable date.', 16, 5);
+				RETURN;
+			END
+		END CATCH
+BEGIN
+SET NOCOUNT ON
+
+BEGIN TRY
+	IF @LatestCustomerOrderDate >= @EarliestCustomerOrderDate AND
+		CAST(GETDATE() AS DATE) >= @EarliestCustomerOrderDate AND
+		CAST(GETDATE() AS DATE) >= @LatestCustomerOrderDate
+		BEGIN
+			SELECT [order_items].[order_id] AS order_id_number, [item_id], [product_name] 
+				,[orders].[order_date] AS date_ordered, SUM(CONVERT(DECIMAL(10, 2), ROUND((1 - [discount]) *
+				([quantity] * [order_items].[list_price]), 2))) 
+				OVER (PARTITION BY [order_items].[order_id]) AS total_order_price, 
+				[order_items].[list_price] AS unit_price, [quantity], [first_name], [last_name]
+				FROM [BikeStores].[sales].[order_items]
+                JOIN [BikeStores].[sales].[orders]
+                ON [order_items].[order_id] = [orders].[order_id]
+                JOIN [BikeStores].[production].[products]
+                ON [order_items].[product_id] = [products].[product_id]
+				JOIN [BikeStores].[sales].[customers]
+                ON [orders].[customer_id] = [customers].[customer_id]
+                WHERE [orders].[customer_id] = 1
+                AND [orders].[order_date] IN(SELECT TOP 3[orders].[order_date]
+                FROM [BikeStores].[sales].[orders]
+                WHERE [orders].[customer_id] = 1
+				AND [orders].[order_date] BETWEEN @EarliestCustomerOrderDate AND @LatestCustomerOrderDate
+                ORDER BY [orders].[order_date] DESC)
+                ORDER BY total_order_price DESC
+				END
+	ELSE
+		BEGIN
+			RAISERROR('An error was raised', 16, 5);
+		END
+END TRY
+
+	BEGIN CATCH
+		IF @EarliestCustomerOrderDate IS NULL OR @LatestCustomerOrderDate IS NULL
+			BEGIN
+				RAISERROR('Neither date can be null', 16, 5);
+			END
+		ELSE IF @EarliestCustomerOrderDate > @LatestCustomerOrderDate
+			BEGIN
+				RAISERROR('The first date must be earlier than or the same as the second', 16, 5);
+			END
+		ELSE IF CAST(GETDATE() AS DATE) < @EarliestCustomerOrderDate OR	
+				CAST(GETDATE() AS DATE) < @LatestCustomerOrderDate
+			BEGIN
+				RAISERROR('Both entered in dates must be on or before today', 16, 5);
+			END
+	END CATCH
+END 

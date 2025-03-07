@@ -5,6 +5,56 @@
     <p>Showing per page: @Model.PageSize</p>
     <p>Number of pages: @Model.TotalPages</p>
 </div>
+<hr />
+    <div class ="text-center">
+        <form  asp-action="Index" asp-controller="View_product_details">
+            <div class="form-group mb-3">
+                    Search by brand: <select name="brand_name" id="the_brands">
+                        <option selected="selected" disabled="true"></option>
+                        @foreach (var brands in (List<String>)ViewData["AllBrandNames"])
+                        {
+                            <option value=@brands>@brands</option>
+                        }
+                        
+                    </select>
+            </div>
+
+            <div class="form-group mb-3">
+                    Category: <select name="category_name" id="the_categories">
+                        <option selected="selected" disabled="true"></option>
+                        @foreach (var categories in (List<String>)ViewData["AllCategoryNames"])
+                        {
+                            <option value=@categories>@categories</option>
+                        }
+
+                    </select>
+            </div>
+
+			<div class="form-group mb-3">
+				Bike name: <input name="product_name" type="search" placeholder="Search" aria-label="Search">
+			</div>
+
+            <div class="form-group mb-3">
+                    Store zipcode: <select name="zipcode_number" id="the_zipcode">
+                        <option selected="selected" disabled="true"></option>
+                        @foreach (var zipcodes in (List<String>)ViewData["allZipCodes"])
+                        {
+                            <option value=@zipcodes>@zipcodes</option>
+                        }
+
+                    </select>
+            </div>
+
+
+
+            <br />
+            <div class="form-group mb-3">
+                <button class="btn btn-success" type="submit">Search</button>
+            </div>
+        </form>
+<a asp-action="Index" class="text-dark">Back to Full List</a>
+    <div class="col-md-6"></div>
+    </div>
 
     <table class="table">
         <thead>

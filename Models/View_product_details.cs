@@ -24,6 +24,5 @@
         public String Store_phone { get; set; }
 
         public required int Quantity { get; set; }
-
     }
 }
