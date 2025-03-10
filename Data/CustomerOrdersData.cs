@@ -2,7 +2,6 @@
 using Mountain_Goats_Bike_App.Data;
 using Mountain_Goats_Bike_App.Models;
 using Microsoft.Data.SqlClient;
-using System.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mountain_Goats_Bike_App.Data
@@ -18,8 +17,8 @@ namespace Mountain_Goats_Bike_App.Data
             {
                 connection.Open();
 
-                    string exec_cust_order_proc =
-                    "EXEC proc_cust_order_details '2016-01-01', '2017-12-31', " + id;
+                string exec_cust_order_proc =
+                    "EXEC proc_cust_order_details '2016-01-01', '2017-12-31" + id;
                     SqlCommand sqlProductSearchCommand = new SqlCommand(exec_cust_order_proc, connection);
                     using (SqlDataReader dataReader = sqlProductSearchCommand.ExecuteReader())
                     {
