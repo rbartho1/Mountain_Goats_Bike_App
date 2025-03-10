@@ -27,9 +27,9 @@ CREATE OR ALTER VIEW view_product_details
 Below is my complete procedure creation query:
 
 CREATE OR ALTER PROCEDURE proc_cust_order_details
-( @FirstCustomerOrderDate VARCHAR(12),
-  @SecondCustomerOrderDate VARCHAR(12), 
-  @ID INT)
+( @FirstCustomerOrderDate VARCHAR(12) = NULL,
+  @SecondCustomerOrderDate VARCHAR(12) = NULL, 
+  @ID INT = NULL)
 AS
 BEGIN TRY
 	DECLARE @EarliestCustomerOrderDate DATE
@@ -78,9 +78,9 @@ BEGIN TRY
 END TRY
 
 	BEGIN CATCH
-		IF @EarliestCustomerOrderDate IS NULL OR @LatestCustomerOrderDate IS NULL
+		IF @EarliestCustomerOrderDate IS NULL OR @LatestCustomerOrderDate IS NULL OR @ID IS NULL
 			BEGIN
-				RAISERROR('Neither date can be null', 16, 5);
+				RAISERROR('Neither date can be null and a customer must be selected', 16, 5);
 			END
 		ELSE IF @EarliestCustomerOrderDate > @LatestCustomerOrderDate
 			BEGIN

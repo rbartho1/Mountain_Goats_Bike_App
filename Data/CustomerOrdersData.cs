@@ -2,7 +2,6 @@
 using Mountain_Goats_Bike_App.Data;
 using Mountain_Goats_Bike_App.Models;
 using Microsoft.Data.SqlClient;
-using System.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mountain_Goats_Bike_App.Data
