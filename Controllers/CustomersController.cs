@@ -38,10 +38,10 @@ namespace Mountain_Goats_Bike_App.Controllers
                 var customer_orders = _customerOrdersDataAccess.GetCustomerOrders(id);
                 return View("CustomerOrders/CustomerOrders", customer_orders);
             }
-            catch (SqlException ex)
+            catch (SqlException caughtSqlException)
             {
                 
-                ViewData["SqlError"] = ex.Message;
+                ViewData["SqlError"] = caughtSqlException.Message;
                 return View("CustomerOrders/CustomerOrders");
             }
             
