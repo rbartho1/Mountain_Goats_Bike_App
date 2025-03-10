@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mountain_Goats_Bike_App.Data;
+using Mountain_Goats_Bike_App.Models;
+using Microsoft.Data.SqlClient;
 
 namespace Mountain_Goats_Bike_App.Controllers
 {
@@ -31,8 +33,18 @@ namespace Mountain_Goats_Bike_App.Controllers
 
         public IActionResult CustomerOrders(int id)
         {
-            var customer_orders = _customerOrdersDataAccess.GetCustomerOrders(id);
-            return View("CustomerOrders/CustomerOrders", customer_orders);
+            try
+            {
+                var customer_orders = _customerOrdersDataAccess.GetCustomerOrders(id);
+                return View("CustomerOrders/CustomerOrders", customer_orders);
+            }
+            catch (SqlException ex)
+            {
+                
+                ViewData["SqlError"] = ex.Message;
+                return View("CustomerOrders/CustomerOrders");
+            }
+            
         }
     }
 }

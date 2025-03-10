@@ -20,5 +20,7 @@
         public required String First_name { get; set; }
 
         public required String Last_name { get; set; }
+
+        //public required String Error_message { get; set; }
     }
 }
