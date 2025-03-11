@@ -18,9 +18,11 @@ namespace Mountain_Goats_Bike_App.Data
                 connection.Open();
 
                     string exec_cust_order_proc =
-                    "EXEC proc_cust_order_details '2016-01-01', '2017-12-31', " + id;
-                    SqlCommand sqlProductSearchCommand = new SqlCommand(exec_cust_order_proc, connection);
-                    using (SqlDataReader dataReader = sqlProductSearchCommand.ExecuteReader())
+                    "EXEC proc_cust_order_details '2016-01-01', '2017-12-31', @ID = @TheID";
+                using (SqlCommand sqlCustomerOrdersCommand = new SqlCommand(exec_cust_order_proc, connection))
+                {
+                    sqlCustomerOrdersCommand.Parameters.AddWithValue("@TheID", id);
+                    using (SqlDataReader dataReader = sqlCustomerOrdersCommand.ExecuteReader())
                     {
                         {
                             while (dataReader.Read())
@@ -41,6 +43,7 @@ namespace Mountain_Goats_Bike_App.Data
                             }
                         }
                     }
+                }
             }
             return customerOrdersList;
         }

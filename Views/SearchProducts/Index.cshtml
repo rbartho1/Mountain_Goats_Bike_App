@@ -9,11 +9,19 @@
     <div class ="text-center">
         <form  asp-action="Index" asp-controller="SearchProducts">
             <div class="form-group mb-3">
-                    Search by brand: <select name="brand_name" id="the_brands">
-                        <option selected="selected" disabled="true"></option>
+                Search by brand: <select id="the_brands" name="brand_name">
+                    <option selected="selected" disabled="@(string.IsNullOrEmpty(ViewBag.ChosenBrand))" ></option>
                         @foreach (var brands in (List<String>)ViewData["AllBrandNames"])
                         {
-                            <option value=@brands>@brands</option>
+                            @if (brands == ViewBag.ChosenBrand) 
+                            {
+                                 <option value="@brands" selected>
+                                     @brands</option>
+                             }
+                             else {
+                                 <option value="@brands">
+                                     @brands</option>
+                             }
                         }
                         
                     </select>
@@ -21,25 +29,41 @@
 
             <div class="form-group mb-3">
                     Category: <select name="category_name" id="the_categories">
-                        <option selected="selected" disabled="true"></option>
+                        <option selected="selected" disabled="@(string.IsNullOrEmpty(ViewBag.ChosenCategory))"></option>
                         @foreach (var categories in (List<String>)ViewData["AllCategoryNames"])
                         {
-                            <option value=@categories>@categories</option>
+                            @if (categories == ViewBag.ChosenCategory) 
+                            {
+                                 <option value="@categories" selected>
+                                     @categories</option>
+                             }
+                             else {
+                                 <option value="@categories">
+                                     @categories</option>
+                             }
                         }
 
                     </select>
             </div>
 
 			<div class="form-group mb-3">
-				Bike name: <input name="product_name" type="search" placeholder="Search" aria-label="Search">
+				Bike name: <input name="product_name" type="search" placeholder="Search" aria-label="Search" value="@ViewBag.TypedInProduct">
 			</div>
 
             <div class="form-group mb-3">
                     Store zipcode: <select name="zipcode_number" id="the_zipcode">
-                        <option selected="selected" disabled="true"></option>
+                        <option selected="selected" disabled="@(string.IsNullOrEmpty(ViewBag.ChosenZipcode))"></option>
                         @foreach (var zipcodes in (List<String>)ViewData["allZipCodes"])
                         {
-                            <option value=@zipcodes>@zipcodes</option>
+                            @if (zipcodes == ViewBag.ChosenZipcode) 
+                            {
+                                 <option value="@zipcodes" selected>
+                                     @zipcodes</option>
+                             }
+                             else {
+                                 <option value="@zipcodes">
+                                     @zipcodes</option>
+                             }
                         }
 
                     </select>
