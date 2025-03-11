@@ -28,6 +28,12 @@ namespace Mountain_Goats_Bike_App.Controllers
             ViewData["AllBrandNames"] = allBrandNames;
             ViewData["AllCategoryNames"] = allCategoryNames;
             ViewData["AllZipCodes"] = allZipCodes;
+
+            ViewBag.ChosenBrand = brand_name;
+            ViewBag.ChosenCategory = category_name;
+            ViewBag.ChosenZipcode = zipcode_number;
+            ViewBag.TypedInProduct = product_name;
+
             return View(PaginatedList<Mountain_Goats_Bike_App.Models.SearchProducts>.Create(product_details, pageNumber ?? 1, pageSize));
 
         }

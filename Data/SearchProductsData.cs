@@ -1,5 +1,6 @@
 ﻿using Mountain_Goats_Bike_App.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Mountain_Goats_Bike_App.Data
 {
@@ -10,45 +11,6 @@ namespace Mountain_Goats_Bike_App.Data
 
         public List<SearchProducts> GetProductDetails(string brand_name, string category_name, string zipcode_number, string product_name)
         {
-            string the_brand_name;
-            if (String.IsNullOrEmpty(brand_name))
-            {
-                the_brand_name = "NULL";
-            } else
-            {
-                the_brand_name = "'" + brand_name + "'";
-            }
-
-            string the_category_name;
-            if (String.IsNullOrEmpty(category_name))
-            {
-                the_category_name = "NULL";
-            }
-            else
-            {
-                the_category_name = "'" + category_name + "'";
-            }
-
-            string the_zipcode_number;
-            if (String.IsNullOrEmpty(zipcode_number))
-            {
-                the_zipcode_number = "NULL";
-            }
-            else
-            {
-                the_zipcode_number = "'" + zipcode_number + "'";
-            }
-
-            string the_product_name;
-            if (String.IsNullOrEmpty(product_name))
-            {
-                the_product_name = "NULL";
-            }
-            else
-            {
-                the_product_name = "'%" + product_name + "%'";
-            }
-
             var product_deatilsList = new List<SearchProducts>();
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -65,31 +27,37 @@ namespace Mountain_Goats_Bike_App.Data
                     "\r\n(@BikeZipcode IS NULL OR zip_code = @BikeZipcode) AND" +
                     "\r\n(@BikeName IS NULL OR name_of_product LIKE @BikeName)" +
                     "\r\nORDER BY id_of_product;'" +
-                    "\r\n\r\nEXEC sp_executesql @SQL, N'@BikeBrand NVARCHAR(255), @BikeCategory NVARCHAR(255), @BikeZipcode NVARCHAR(255), @BikeName NVARCHAR(255)', " + the_brand_name + ", " + the_category_name + ", " + the_zipcode_number + ", " + the_product_name + ";";
-                SqlCommand sqlProductSearchCommand = new SqlCommand(statement_product_details_search, connection);
-                using (SqlDataReader dataReader = sqlProductSearchCommand.ExecuteReader())
+                    "\r\n\r\nEXEC sp_executesql @SQL, N'@BikeBrand NVARCHAR(255), @BikeCategory NVARCHAR(255), @BikeZipcode NVARCHAR(255), @BikeName NVARCHAR(255)', " +
+                    "@BikeBrand = @TheBikeBrand, @BikeCategory = @TheBikeCategory, @BikeZipcode = @TheBikeZipcode, @BikeName = @TheBikeName;";
+                using (SqlCommand sqlProductSearchCommand = new SqlCommand(statement_product_details_search, connection))
                 {
-                    while (dataReader.Read())
+                    sqlProductSearchCommand.Parameters.AddWithValue("@TheBikeBrand", string.IsNullOrEmpty(brand_name) ? DBNull.Value : brand_name);
+                    sqlProductSearchCommand.Parameters.AddWithValue("@TheBikeCategory", string.IsNullOrEmpty(category_name) ? DBNull.Value : category_name);
+                    sqlProductSearchCommand.Parameters.AddWithValue("@TheBikeZipcode", string.IsNullOrEmpty(zipcode_number) ? DBNull.Value : zipcode_number);
+                    sqlProductSearchCommand.Parameters.AddWithValue("@TheBikeName", string.IsNullOrEmpty(product_name) ? DBNull.Value : "%" + product_name + "%");
+                    using (SqlDataReader dataReader = sqlProductSearchCommand.ExecuteReader())
                     {
-                        SearchProducts product_details = new SearchProducts
+                        while (dataReader.Read())
                         {
-                            Product_name = dataReader["name_of_product"].ToString(),
-                            Category_name = dataReader["name_of_category"].ToString(),
-                            Brand_name = dataReader["name_of_brand"].ToString(),
-                            Price = (decimal)dataReader["list_price"],
-                            Store_name = dataReader["store_name"].ToString(),
-                            Street = dataReader["street"].ToString(),
-                            City = dataReader["city"].ToString(),
-                            State = dataReader["state"].ToString(),
-                            Zip_code = dataReader["zip_code"].ToString(),
-                            Store_phone = dataReader["phone"].ToString(),
-                            Quantity = (int)dataReader["quantity"]
-                        };
-                        product_deatilsList.Add(product_details);
+                            SearchProducts product_details = new SearchProducts
+                            {
+                                Product_name = dataReader["name_of_product"].ToString(),
+                                Category_name = dataReader["name_of_category"].ToString(),
+                                Brand_name = dataReader["name_of_brand"].ToString(),
+                                Price = (decimal)dataReader["list_price"],
+                                Store_name = dataReader["store_name"].ToString(),
+                                Street = dataReader["street"].ToString(),
+                                City = dataReader["city"].ToString(),
+                                State = dataReader["state"].ToString(),
+                                Zip_code = dataReader["zip_code"].ToString(),
+                                Store_phone = dataReader["phone"].ToString(),
+                                Quantity = (int)dataReader["quantity"]
+                            };
+                            product_deatilsList.Add(product_details);
+                        }
                     }
                 }
             }
-
             return product_deatilsList;
         }
 
