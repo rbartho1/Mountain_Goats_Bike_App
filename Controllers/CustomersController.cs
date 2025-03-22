@@ -19,7 +19,7 @@ namespace Mountain_Goats_Bike_App.Controllers
         public IActionResult Index(int? pageNumber)
         {
             int pageSize = 10;
-            
+
             var customers = _dataAccess.GetCustomers();
 
             return View(PaginatedList<Mountain_Goats_Bike_App.Models.Customers>.Create(customers, pageNumber ?? 1, pageSize));
@@ -40,11 +40,27 @@ namespace Mountain_Goats_Bike_App.Controllers
             }
             catch (SqlException caughtSqlException)
             {
-                
+
                 ViewData["SqlError"] = caughtSqlException.Message;
                 return View("CustomerOrders/CustomerOrders");
             }
-            
+
+        }
+
+        public IActionResult CreateANewOrder(int id)
+        {
+            try
+            {
+                _customerOrdersDataAccess.NewOrder(id, 3, 9, 200, 211);
+                return RedirectToAction("CustomerOrders", new { id = id });
+            }
+            catch (SqlException caughtSqlException)
+            {
+
+                ViewData["SqlError"] = caughtSqlException.Message;
+                return View("CustomerOrders/CustomerOrders");
+            }
+
         }
     }
 }

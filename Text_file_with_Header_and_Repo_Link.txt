@@ -2,94 +2,113 @@ Ryan Bartholomew
 StudentID: 917656984
 Database Systems II (CS 6232)
 Spring 2025
-Homework 5
+Homework 6
 
 
-The link to my private GitHub Repository for this project is https://github.com/rbartho1/Mountain_Goats_Bike_App.
+b. The link to my private GitHub Repository for this project is https://github.com/rbartho1/Mountain_Goats_Bike_App.
 
-Below is my create view query:
 
-CREATE OR ALTER VIEW view_product_details
-	AS SELECT[products].[product_name] AS name_of_product,
-	[categories].[category_name] AS name_of_category,
-	[brands].[brand_name] AS name_of_brand, [list_price], 
-	[store_name], [street], [city], [state], [zip_code], [phone], [quantity], [products].[product_id] AS id_of_product
-	FROM [BikeStores].[production].[products]
-	JOIN [BikeStores].[production].[brands]
-	ON [products].[brand_id] = [brands].[brand_id]
-	JOIN [BikeStores].[production].[categories]
-	ON [products].[category_id] = [categories].[category_id]
-	JOIN [BikeStores].[production].[stocks]
-	ON [products].[product_id] = [stocks].[product_id]
-	JOIN [BikeStores].[sales].[stores]
-	ON [stocks].[store_id] = [stores].[store_id];
+c. Below is my audit table creation query:
 
-Below is my complete procedure creation query:
+USE BikeStores;
 
-CREATE OR ALTER PROCEDURE proc_cust_order_details
-( @FirstCustomerOrderDate VARCHAR(12) = NULL,
-  @SecondCustomerOrderDate VARCHAR(12) = NULL, 
-  @ID INT = NULL)
+DROP TABLE IF EXISTS [BikeStores].[sales].[bikestore_audit];
+
+CREATE TABLE [BikeStores].[sales].[bikestore_audit]
+( [id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+[audit_timestamp] DATETIME NOT NULL,
+[activity_type] VARCHAR(255),
+[record_info] NTEXT NOT NULL);
+
+
+d. Below is the full query for the trigger I created:
+
+CREATE TRIGGER the_auditor
+ON [BikeStores].[sales].[orders]
+AFTER INSERT, UPDATE
 AS
-BEGIN TRY
-	DECLARE @EarliestCustomerOrderDate DATE
-	DECLARE @LatestCustomerOrderDate DATE
-	SET @EarliestCustomerOrderDate = CONVERT(DATE, @FirstCustomerOrderDate)
-	SET @LatestCustomerOrderDate = CONVERT(DATE, @SecondCustomerOrderDate)
-	END TRY
-		BEGIN CATCH
-			BEGIN
-				RAISERROR('Cannot convert one or both of the given dates into a readable date.', 16, 5);
-				RETURN;
-			END
-		END CATCH
 BEGIN
-SET NOCOUNT ON
+    SET NOCOUNT ON;
+    INSERT INTO [BikeStores].[sales].[bikestore_audit]
+	([audit_timestamp], 
+	[activity_type], 
+	[record_info])
+	SELECT
+	GETDATE(),
+	'order created',
+	CAST(order_creation.[order_id] AS NVARCHAR(255)) + ', ' + CAST(order_creation.[customer_id] AS NVARCHAR(255)) + ', ' + CAST(order_creation.[staff_id] AS NVARCHAR(255)) + ', ' + CAST(order_creation.[store_id] AS NVARCHAR(255))
+	FROM inserted order_creation
+	UNION ALL
+	SELECT
+	GETDATE(),
+	'order updated',
+	CAST(order_update.[order_id] AS NVARCHAR(255)) + ', ' + CAST(order_update.[customer_id] AS NVARCHAR(255)) + ', ' + CAST(order_update.[staff_id] AS NVARCHAR(255)) + ', ' + CAST(order_update.[store_id] AS NVARCHAR(255))
+	FROM inserted order_update;
+END;
 
-BEGIN TRY
-	IF @LatestCustomerOrderDate >= @EarliestCustomerOrderDate AND
-		CAST(GETDATE() AS DATE) >= @EarliestCustomerOrderDate AND
-		CAST(GETDATE() AS DATE) >= @LatestCustomerOrderDate
+
+e. Below is my complete procedure creation query for the procedure I created to test my trigger:
+
+CREATE OR ALTER PROCEDURE AuditTestProcedure
+	@id_of_customer INT,
+	@id_of_store INT,
+	@id_of_staff INT,
+	@product1_id INT,
+	@product2_id INT,
+	@quantity1 INT,
+	@quantity2 INT,
+	@listed_price1 DECIMAL(10,2),
+	@listed_price2 DECIMAL(10,2),
+	@the_first_discount DECIMAL(4,2),
+	@the_second_discount DECIMAL (4,2)
+AS
+BEGIN
+	DECLARE @NewlyCreatedOrderID INT;
+	
+	BEGIN TRANSACTION;
+
+		IF NOT EXISTS (SELECT 1 FROM [BikeStores].[sales].[order_items] WHERE [product_id] = @product1_id)
 		BEGIN
-			SELECT [order_items].[order_id] AS order_id_number, [item_id], [product_name] 
-				,[orders].[order_date] AS date_ordered, SUM(CONVERT(DECIMAL(10, 2), ROUND((1 - [discount]) *
-				([quantity] * [order_items].[list_price]), 2))) 
-				OVER (PARTITION BY [order_items].[order_id]) AS total_order_price, 
-				[order_items].[list_price] AS unit_price, [quantity], [first_name], [last_name]
-				FROM [BikeStores].[sales].[order_items]
-                JOIN [BikeStores].[sales].[orders]
-                ON [order_items].[order_id] = [orders].[order_id]
-                JOIN [BikeStores].[production].[products]
-                ON [order_items].[product_id] = [products].[product_id]
-				JOIN [BikeStores].[sales].[customers]
-                ON [orders].[customer_id] = [customers].[customer_id]
-                WHERE [orders].[customer_id] = @ID
-                AND [orders].[order_date] IN(SELECT TOP 3[orders].[order_date]
-                FROM [BikeStores].[sales].[orders]
-                WHERE [orders].[customer_id] = @ID
-				AND [orders].[order_date] BETWEEN @EarliestCustomerOrderDate AND @LatestCustomerOrderDate
-                ORDER BY [orders].[order_date] DESC)
-                ORDER BY total_order_price DESC
-				END
-	ELSE
-		BEGIN
-			RAISERROR('An error was raised', 16, 5);
+			RAISERROR('A requested product does not exist in the database', 16, 5);
+			ROLLBACK;
+			RETURN;
 		END
-END TRY
+
+		IF NOT EXISTS (SELECT 1 FROM [BikeStores].[sales].[order_items] WHERE [product_id] = @product2_id)
+		BEGIN
+			RAISERROR('A requested product does not exist in the database', 16, 5);
+			ROLLBACK;
+			RETURN;
+		END
+	
+	BEGIN TRY
+		INSERT INTO [BikeStores].[sales].[orders]
+		([customer_id],
+			[order_status],
+			[order_date],
+			[required_date],
+			[store_id],
+			[staff_id])
+		VALUES
+		(@id_of_customer, 1, GETDATE(), GETDATE(), @id_of_store, @id_of_staff);
+	
+		SET @NewlyCreatedOrderID = SCOPE_IDENTITY(); 
+		INSERT INTO [BikeStores].[sales].[order_items]
+		([order_id],
+			[item_id],
+			[product_id],
+			[quantity],
+			[list_price],
+			[discount])
+		VALUES
+		(@NewlyCreatedOrderID, 1, @product1_id, @quantity1, @listed_price1, @the_first_discount), (@NewlyCreatedOrderID, 2, @product2_id, @quantity2, @listed_price2, @the_second_discount); 
+		COMMIT;
+
+	END TRY
 
 	BEGIN CATCH
-		IF @EarliestCustomerOrderDate IS NULL OR @LatestCustomerOrderDate IS NULL OR @ID IS NULL
-			BEGIN
-				RAISERROR('Neither date can be null and a customer must be selected', 16, 5);
-			END
-		ELSE IF @EarliestCustomerOrderDate > @LatestCustomerOrderDate
-			BEGIN
-				RAISERROR('The first date must be earlier than or the same as the second', 16, 5);
-			END
-		ELSE IF CAST(GETDATE() AS DATE) < @EarliestCustomerOrderDate OR	
-				CAST(GETDATE() AS DATE) < @LatestCustomerOrderDate
-			BEGIN
-				RAISERROR('Both entered in dates must be on or before today', 16, 5);
-			END
-	END CATCH
-END 
+		RAISERROR('One of the requested ids was not in the database.', 16, 5);
+		ROLLBACK;
+	END CATCH;
+
+END;

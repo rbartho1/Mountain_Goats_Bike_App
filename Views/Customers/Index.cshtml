@@ -1,9 +1,9 @@
 ﻿@model PaginatedList<Mountain_Goats_Bike_App.Models.Customers>
 <div class="text-center">
-<h1>Customers</h1>
-<p>Total: @Model.TotalEntries</p>
-<p>Showing per page: @Model.PageSize</p>
-<p>Number of pages: @Model.TotalPages</p>
+    <h1>Customers</h1>
+    <p>Total: @Model.TotalEntries</p>
+    <p>Showing per page: @Model.PageSize</p>
+    <p>Number of pages: @Model.TotalPages</p>
 </div>
 <table class="table">
     <thead>
@@ -23,7 +23,8 @@
     <tbody>
 
 
-        @foreach (var customers in Model) {
+        @foreach (var customers in Model)
+        {
             <tr class="text-center">
                 <td>@customers.Customer_id</td>
                 <td>@customers.First_name</td>
@@ -36,12 +37,12 @@
                 <td>@customers.Zip_code</td>
                 <td>
                     <a class="btn btn-outline-secondary"
-                            data-bs-toggle="modal" data-bs-target="#button_@customers.Customer_id">
+                       data-bs-toggle="modal" data-bs-target="#button_@customers.Customer_id">
                         Details
                     </a>
                     <div class="modal fade" id="button_@customers.Customer_id" tabindex="-1" aria-labelledby="button_@customers.Customer_id"
                          aria-hidden="true">
-						<div class="modal-dialog modal-content">
+                        <div class="modal-dialog modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5">Customer Information for @customers.First_name @customers.Last_name</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -93,6 +94,11 @@
                         </div>
                     </div>
                     <a class="btn btn-outline-secondary" href="@Url.Action("CustomerOrders", "Customers", new{id = @customers.Customer_id} )">Orders</a>
+                    <form method="post" action="@Url.Action("CreateANewOrder", "Customers", new{id = @customers.Customer_id} )">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            New Order
+                        </button>
+                    </form>
                 </td>
             </tr>
         }
@@ -104,10 +110,10 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action = "Index" asp-route-pageNumber = "@(Model.PageIndex - 1)" class = "btn btn-outline-secondary @prevDisabled">
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-outline-secondary @prevDisabled">
     Previous
 </a>
 
-<a asp-action = "Index" asp-route-pageNumber = "@(Model.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">
     Next
 </a>
